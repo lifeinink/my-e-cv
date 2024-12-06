@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Patrick O'Keeffe's Resume</title>
+        <meta charset="UTF-8">
+        <meta name="author" content="Patrick O'Keeffe">
+        <meta naem="description" content="The curriculum vitae of Patrick O'Keeffe, a recent Information Science graduate looking for part time work while he studies at the postgraduate level">
+        <meta name="keywords" content="cv,resume,Patrick OKeeffe, graduate">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="cv_style.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Flavors&family=Jacquard+12&family=Kaushan+Script&family=Pixelify+Sans:wght@400..700&family=Protest+Revolution&family=Rubik+Puddles&display=swap" rel="stylesheet">
+
+        <!--
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+        <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
+        -->
+        <script type="text/javascript" src="qrcode.js"></script>
+        
+        <!--
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        -->
+
+        
+        <script type="text/javascript" src="scripts.js"></script>
+
+    </head>
+    <body>
+        <header>
+            <h1>Patrick O&#39;Keeffe</h1>
+            <h2>Graduate Student: Information Sciences</h2>
+        </header>
+        <main>
+            <div>
+                <section>
+                    <h3>Contacts</h3>
+                    <address id="contacts">
+                        <ul class="fa-ul">
+                            <li><a id="contact-email-a" href="mailto:patrick.okeeffe.work@gmail.com?subject=CV Response"><i class="fa-li fas fa-envelope"></i>patrick.okeeffe.work@gmail.com</a></li>
+                            <li id="contact-phone-li"><a href="tel:{phone}"><i class="fa-li fas fa-phone"></i>{phone}</a></li>
+                            <li><a id="contact-location-coords" href="geo:-43.56306819585306,172.62538760692783;u=1170"><i class="fa-li fas fa-map-marker-alt"></i><sec id="contact-address-text">Somerfield, Christchurch</sec></a></li>
+                            <li><a href="https://github.com/lifeinink"><i class="fa-li fab fa-github"></i>https://github.com/lifeinink</a></li>
+                            <li class="print-only"><a id="contact-web-a" href=""><i class="fa-li fas fa-address-book"></i>{web-address}</a></li>
+                        </ul>
+                    </address>
+                </section>
+                <section id="skills-section">
+                    <h3>Skills</h3>
+                    <div id="highlighed-skills">
+                        {highlighted-skills}
+                    </div>
+                    <nav class="screen-only"><button id="skills-expander" onclick="expand('skills','skills-expander')">▼ Expand</button></nav>
+                    <div id="skills" class="hidden screen-only">
+                        {skills}
+                    </div>
+                </section>
+                <section id="pdf-link">
+                    <sec class="center-block">
+                        <button onclick="getCV()">CV</button>
+                    </sec>
+                </section>
+                <section id="e-portfolio">
+                    <h3>ePortfolio</h3>
+                    <sec class="center-block">
+                        <a href="." id="qr-code"></a>
+                    </sec>
+                </section>
+            </div>
+            <div>
+                <section>
+                    <h3>Profile</h3>
+                    <p>I&#39;m a computer science student who is graduating soon and looking for part time work over the summer and during subsequent postgraduate study. Part way through a masters in biology I discovered I&#39;m more suited to computational problem solving than wet laboratory work and switched career paths, stumbling through data science study on the way. I&#39;m eager to learn how to be a productive and amiable member of a professional team.</p>
+                </section>
+                <section>
+                    <h3>Education</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>GPA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Graduating</td>
+                                <td>Graduate Diploma in Information Science</td>
+                                <td>Massey</td>
+                                <td>7.45</td>
+                            </tr>
+                            <tr>
+                                <td>2018</td>
+                                <td>Bachelor of Science in Molecular and Cellular Biology</td>
+                                <td>Waikato</td>
+                                <td>6.22</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section>
+                    <h3>Experience</h3>
+                    <section><!-- Maybe have as two rowed table to help align formatting?-->
+                        <div>
+                            <h4>Summer Research Intern</h4>
+                            <h5>AgResearch, Ruakura Research Complex, Hamilton</h5>
+                            <em>Feb 2018 - Nov 2017</em>
+                            <p>Investigated the relationship between CRISPR Cas9 target editing efficiency and the shape of guide RNA using a data science approach and computational experiments.</p>
+                            <p>
+                                Key Findings:
+                                <ul>
+                                    <li>The length of hairpin loop like stems of guide RNA positively correlated with off-target editing efficiency.</li>
+                                    <li>Circumstantial evidence suggesting spacer regions fold independent of the scaffold sequence.</li>
+                                </ul>
+                            </p>
+                            <p>Tools: Rlang with GGPLOT2, tidyverse and MXNet. Python with Selenium.</p>
+                        </div>
+                    </section>
+                </section>
+                <section id="transport">
+                    <h3>Transport</h3>
+                    {map}
+                    <p>Distance to work site: <sec id="distance-km">Loading...</sec> km</p>
+                    <p class="hidden" id="is-relocation">Relocation required</p>
+                    <table id="commute-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Comfortable commute distance</th>
+                                <th>Commutable</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Public transportation</td>
+                                <td>As far as it goes</td>
+                                <td id="bus-commutable">Probably</td>
+                            </tr>
+                            <tr>
+                                <td>Bike</td>
+                                <td>6km</td>
+                                <td id="bike-commutable"></td>
+                            </tr>
+                            <tr>
+                                <td>Walk</td>
+                                <td>4.5km</td>
+                                <td id="walk-commutable"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section>
+                    <h3>Referees</h3>
+                    <p>Supplied on request.</p>
+                </section>
+            </div>
+        </main>
+        <footer>
+        </footer>
+    </body>
+</html>

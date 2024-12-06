@@ -1,0 +1,117 @@
+{
+    "type":"skills",
+    "buckets":[
+        {
+            "name":"Interpersonal Skills",
+            "score":"AVG:2,2,1,2,2",
+            "content":[0,1,2,3,4]
+        },
+        {
+            "name":"Professional Reliability",
+            "score":"AVG",
+            "content":[6,7,8,9,10]
+        },
+        {
+            "name":"Problem Solving",
+            "score":"AVG",
+            "content":[11,12,13,14,15]
+        }
+    ],
+    "content":[
+        {
+            "id":0,
+            "name":"Empathy",
+            "score":2.5,
+            "description":"Practiced at seeing from others perspectives, but I'm not very socially perceptive."
+        },
+        {
+            "id":1,
+            "name":"Rapport building",
+            "score":1.5,
+            "description":"I build friendly relationships with coworkers, be amiable and can reach across conflict, but I'm slow to catch myself when I'm blundering."
+        },
+        {
+            "id":2,
+            "name":"Written communication",
+            "score":3,
+            "description":"Experienced with scientific and management report writing through my tertiary education, but I lack the skills that come with decades of experience. I have a tendency to read thoroughly that might inhibit speed reading."
+        },
+        {
+            "id":3,
+            "name":"Oral communication",
+            "score":2,
+            "description":"While I deliberately practice active listening and have been called articulate, my ability to distill complex information was limited during my research internship at AgResearch. I struggle to comprehend multiple people talking at once, but can navigate chaotic environments. I get the jitters when doing public speaking."
+        },
+        {
+            "id":4,
+            "name":"Feedback",
+            "score":2,
+            "description":"I practice reframing everything as opportunities for growth and use common techniques for eliciting feedback from others. But I can sometimes overestimate willingness for blunt conversation when giving feedback instead of eliciting self-reflection and highlighting strengths"
+        },
+        {
+            "id":5,
+            "name":"Professionalism",
+            "score":1.5,
+            "description":"I can keep friendly when others are hostile, but I'm not used to the presentational standards of customer facing work. I think I could quickly grow used to careful choice of words and presentation rather than being intrinsically unconcerned about my presentation."
+        },
+        {
+            "id":6,
+            "name":"Dependability",
+            "score":2
+        },
+        {
+            "id":7,
+            "name":"Initiative and responsiveness",
+            "score":1.5,
+            "description":"I can generally find and address gaps in needs, but once I've set my mind on something it can be hard for me to switch my attention without considerable effort"
+        },
+        {
+            "id":8,
+            "name": "Time management",
+            "score": 2.5,
+            "description":"I can generally prioritise competing demands and be punctual. Even while volunteering, starting a business with friends, and studying full time, I've only ever had to use an extension on an assignment once. But I'm yet to test the limits of my time management abilities so I can't give a precise assessment of my skill here."
+        },
+        {
+            "id":9,
+            "name": "Work ethic",
+            "score": 3,
+            "description": "While I struggled with this in the past I now consistently put hours into my occupation every week-day, as might be supported by my academic record. Disruptions to my ability to work are controlled by medication. But I'm yet to pressure test my work ethic outside of redoing entire coding projects close to deadlines (I didn't test how long I could work in intense bursts fo cognitive work totalling over eight hours a day until I broke, so I don't know where that line is at the moment). I have moderate self-motivation abilities."
+        },
+        {
+            "id":10,
+            "name":"Integrity",
+            "score": 2,
+            "description":"I sometimes fail at tight lipped confidentially by assuming people already know things. And well I think I have a good sense of responsibility, harm and growth, I'm not immune to the temptations of white lies."
+        },
+        {
+            "id":11,
+            "name":"Critical thinking",
+            "score":3,
+            "description":"I was trained in critical thinking at the postgraduate level and find ways to exercise this skill for fun in my own time."
+        },
+        {
+            "id":12,
+            "name":"Systems thinking",
+            "score":1.25,
+            "description":"I practice systems thinking but I am a beginner, having only completed a basic course and practiced formally since them. But I've been thinking about things as feedback systems for well over a decade."
+        },
+        {
+            "id":13,
+            "name": "Linear thinking",
+            "score":3.75,
+            "description":"I've experience orchestrating chains of reasoning and causality from programming and studies in biology. Well I've been able to improvise solutions to unexpected complications under time pressure, my strengths lie in deeper, slower considerations. However, my working memory has gotten worse since starting medication, reducing this ability somewhat."
+        },
+        {
+            "id":14,
+            "name":"Lateral thinking",
+            "score":2.75,
+            "description":"I enjoy approaching problems from uinexpected angles. But while I can throw bunches of ideas at the wall to see what sticks, maintaining creativity when creating solutions based on systematic inferences from unique perspectives is something I need more practice in."
+        },
+        {
+            "id":15,
+            "name":"Creative problem solving",
+            "score":3,
+            "description":"This is one of my favourite skills to engage with and grow. I use it in my hobbies, assignments, projects, and hypothetical situations just to have a bit of fun. The greatest weakness I'm aware off in this area occurs during the prolonged execution of iterative solutions to problems where information is complete, and I can't find alternative perspectives to keep the novelty of the problem going, leading to reduced motivation."
+        }
+    ]
+}

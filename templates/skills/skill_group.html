@@ -1,0 +1,10 @@
+<div class="skill-section">
+    <h4>{name} {score}</h4>
+    <ul id="{name}-snapshot">
+        {highlighted_skills}
+    </ul>
+    <nav class="screen-only"><button id="{name}-expander" onclick="expand('{name}-expanded','{name}-expander')">▼ Expand</button></nav>
+    <ul id="{name}-expanded" class="hidden screen-only">
+        {unhighlighted_skills}
+    </ul>
+</div>
