@@ -9,10 +9,12 @@
     --secondary-pastel: #EED1D7;
     --black: #202020;
 }
-body {
+
+html, body {
     margin: 0px;
     background-color: var(#fff);
     color: var(--black);
+    height:100%;
 }
 header{
     display: inline-block;
@@ -41,6 +43,7 @@ main {
     grid-template-columns: 25% 70%;
     font-family: Georgia, serif;
     background-color: var(--primary);
+    height: 100%;
 }
 
 main > * {
@@ -150,7 +153,8 @@ table{
 
 .skill-section > ul > li {
     position: relative;
-    display: inline-block;
+    display: block;
+    width:fit-content;
 }
 
 #e-portfolio{
@@ -173,6 +177,10 @@ table{
 }
 .skill-section > ul > li:hover .hover-text{
     display: block;
+    min-width:100px;
+    width: 200px;
+    max-width: 500px;
+    text-wrap-mode:wrap;
 }
 
 .center-block{
@@ -217,6 +225,7 @@ main > :first-child .center-block button:hover{
         -webkit-print-color-adjust: exact; /* Chrome, Safari */
         print-color-adjust: exact;
         color-adjust: exact; /* Standard */
+        max-height: 87.1vh;
       }
     header{
         box-shadow: none;
@@ -233,8 +242,8 @@ main > :first-child .center-block button:hover{
 
     main > :first-child{
         margin:0px;
-        min-height: 85.3vh;
-        /*background-color:white;
+        /*min-height: 85.3vh;
+        background-color:white;
         color: var(--black);*/
     }
 
@@ -286,5 +295,9 @@ main > :first-child .center-block button:hover{
     }
     main > :first-child ul{
         margin:0px;
+    }
+    .skill-section > ul > li:hover .hover-text{
+        margin-left:-100%;
+        margin-top: 1em;
     }
 }
