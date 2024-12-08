@@ -256,7 +256,7 @@ function getUnBucketedIDList(total_skills,buckets,selected_ids){
 
     let unbucketed_ids = [];
     for(let i = 0; i < total_skills.length;i++){
-        if(!bucketed_ids.includes(total_skills[0].id))unbucketed_ids.push(total_skills[i].id);
+        if(!bucketed_ids.includes(total_skills[i].id))unbucketed_ids.push(total_skills[i].id);
     }
     return unbucketed_ids;
 }
@@ -315,7 +315,7 @@ async function insertSkills(){
 
     //Create skills display
     let highlighted_skills_html = "";
-    let remaining_selection = getUnBucketedIDList(total_skills,highlighted_buckets,selected_skills);
+    let remaining_selection = getUnBucketedIDList(total_skills,skills_json.buckets,selected_skills);
     //Starting with the skill sections that might be in the highlights and skills that aren't in sections bu are in the cv highlights
     for(let i = 0; i < highlighted_buckets.length; i++){
         let group_template = skill_group_template;
@@ -350,7 +350,7 @@ async function insertSkills(){
     for(let i = 0; i < skills_json.buckets.length; i++){
         if(!highlighted_buckets.includes(skills_json.buckets[i])){
             let other_group = skill_group_template;
-            let unhighlighted_group_skills = getBucketSkillsHTML(total_skills,remaining_selection,skills_json.buckets[i],true,false)[0];
+            let unhighlighted_group_skills = getBucketSkillsHTML(total_skills,selected_skills,skills_json.buckets[i],true,false)[0];
             let score = getScore(skills_json.buckets[i].score,getSkillById(skills_json.buckets[i].content));
             other_group = other_group.replaceAll("{name}",skills_json.buckets[i].name);
             other_group = other_group.replaceAll("{score}",getScoreHTML(score));
