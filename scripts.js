@@ -408,7 +408,7 @@ async function getAddressCoords(address){
 }*/
 
 async function getRoutedDistance(lat1,lon1,lat2,lon2){
-    const url = `http://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=false`;
+    const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=false`;
 
     var result =  await fetch(url);
     var json = await result.json();
