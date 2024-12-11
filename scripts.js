@@ -427,42 +427,41 @@ async function generateMap(source, destination,clat,clon){
 
     google.maps.event.addListenerOnce(map, 'idle', () => {
         console.log("Map fully loaded and idle");
+        const directionsService = new google.maps.DirectionsService();
+        const directionsRenderer = new google.maps.DirectionsRenderer();
+        directionsRenderer.setMap(map);
+
+        directionsService.route({origin:source,destination:destination,travelMode:google.maps.TravelMode.TRANSIT},(result, status) => {
+            switch(status) {
+                case google.maps.DirectionsStatus.OK:
+                    directionsRenderer.setDirections(result);
+                    map.fitBounds(result.routes[0].bounds);
+                    break;
+                case google.maps.DirectionsStatus.ZERO_RESULTS:
+                    console.log("No transit routes found.");
+                    // Fallback: try driving mode
+                    directionsService.route({origin:source,                     destination:destination, 
+                        travelMode: google.maps.TravelMode.DRIVING
+                    }, (result, status) => {
+                        if(status === "OK"){
+                            directionsRenderer.setDirections(result);
+                            map.fitBounds(result.routes[0].bounds);
+                            console.log("Displaying map directions");
+                        } else {
+                            console.error("Failed to display map directions: "+status);
+                        }});
+                    break;
+                case google.maps.DirectionsStatus.NOT_FOUND:
+                    console.error("One or both locations not found.");
+                    break;
+                default:
+                    console.error("Unexpected map error");
+            }
+        });
     });
     google.maps.event.addListener(map, 'error', (error) => {
         console.error('Map loading error:', error);
     });
-
-    const directionsService = new google.maps.DirectionsService();
-    const directionsRenderer = new google.maps.DirectionsRenderer();
-    directionsRenderer.setMap(map);
-
-    directionsService.route({origin:source,destination:destination,travelMode:google.maps.TravelMode.TRANSIT},(result, status) => {
-        switch(status) {
-            case google.maps.DirectionsStatus.OK:
-                directionsRenderer.setDirections(result);
-                map.fitBounds(result.routes[0].bounds);
-                break;
-            case google.maps.DirectionsStatus.ZERO_RESULTS:
-                console.log("No transit routes found.");
-                // Fallback: try driving mode
-                directionsService.route({origin:source,destination:destination, 
-                    travelMode: google.maps.TravelMode.DRIVING
-                }, (result, status) => {
-                    if(status === "OK"){
-                        directionsRenderer.setDirections(result);
-                        map.fitBounds(result.routes[0].bounds);
-                        console.log("Displaying map directions");
-                    } else {
-                        console.error("Failed to display map directions: "+status);
-                    }});
-                break;
-            case google.maps.DirectionsStatus.NOT_FOUND:
-                console.error("One or both locations not found.");
-                break;
-            default:
-                console.error("Unexpected map error");
-        }
-    })
 }
 
 async function updateLocations(source,destination,secret){
