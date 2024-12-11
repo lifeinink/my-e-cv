@@ -150,7 +150,7 @@ async function getEncryptedData(){
         }
         const decoder = new TextDecoder("utf-8");
         data_as_string = decoder.decode(data)
-        dataFound = data_as_string.split("<##>").length == 4;
+        dataFound = data_as_string.split("<##>").length >= 4;
     }
     if(!dataFound){
         return null;
@@ -465,15 +465,15 @@ async function generateMap(source, destination,clat,clon){
     })
 }
 
-async function updateLocations(source,destination){
-    //Map back when I wanted to try google maps but didn't have an API key
-    //let map_html = "<iframe id=\"travel-map\" style=\"border:0;\" allowfullscreen=\"\" src=\"https://www.google.com/maps/embed/v1/directions?origin={source}&destination={dest}\" loading=\"lazy\"></iframe>";
-    //map_html = map_html.replaceAll("{source}",source);
-    //map_html = map_html.replaceAll("{dest}",destination);
-
-    //let map_html = "<div id=\"travel-map\"></div>"
-
-    //document.getElementById("transport").innerHTML = document.getElementById("transport").innerHTML.replaceAll("{map}",map_html);
+async function updateLocations(source,destination,secret){
+    if(secret != ""){
+        (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+            key: secret,
+            v: "weekly",
+            // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
+            // Add other bootstrap parameters as needed, using camel case.
+      });
+    }
 
     let coords = await getAddressCoords(source);
     document.getElementById("contact-location-coords").href = "geo:"+coords[0]+","+coords[1]+";u=1170";
@@ -486,7 +486,7 @@ async function updateLocations(source,destination){
 
     //TODO: verify billing details once bank account has enough to do so to try get towards displaying right
     // Once debugged as being used correctly add a restriction to the github website for API key use and only then commit
-    generateMap(source,destination,avg_lat,avg_lon);
+    if(secret != "")generateMap(source,destination,avg_lat,avg_lon);
 
     var dist_and_duration = await getRoutedDistance(coords[0],coords[1],dest_coords[0],dest_coords[1]);
     document.getElementById("distance-km").innerHTML = dist_and_duration[0].toFixed(2);
@@ -533,7 +533,10 @@ async function onCreation(){
 
         web_link.href = window.location.toString();
 
-        updateLocations(contacts[1],contacts[2]);
+        var secret = "";
+        if(contacts.length >= 5)secret = contacts[4];
+
+        updateLocations(contacts[1],contacts[2],secret);
     }
 
     try{
