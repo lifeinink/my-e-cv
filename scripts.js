@@ -415,15 +415,65 @@ async function getRoutedDistance(lat1,lon1,lat2,lon2){
     return [json.routes[0].legs[0].distance / 1000.0,json.routes[0].legs[0].duration / 60.0];
 }
 
+let map;
+async function generateMap(source, destination,clat,clon){
+
+    const { Map } = await google.maps.importLibrary("maps");
+
+    map = new Map(document.getElementById("map"), {
+        center: { lat: clat, lng: clon },
+        zoom: 8,
+    });
+
+    google.maps.event.addListenerOnce(map, 'idle', () => {
+        console.log("Map fully loaded and idle");
+    });
+    google.maps.event.addListener(map, 'error', (error) => {
+        console.error('Map loading error:', error);
+    });
+
+    const directionsService = new google.maps.DirectionsService();
+    const directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+
+    directionsService.route({origin:source,destination:destination,travelMode:google.maps.TravelMode.TRANSIT},(result, status) => {
+        switch(status) {
+            case google.maps.DirectionsStatus.OK:
+                directionsRenderer.setDirections(result);
+                map.fitBounds(result.routes[0].bounds);
+                break;
+            case google.maps.DirectionsStatus.ZERO_RESULTS:
+                console.log("No transit routes found.");
+                // Fallback: try driving mode
+                directionsService.route({origin:source,destination:destination, 
+                    travelMode: google.maps.TravelMode.DRIVING
+                }, (result, status) => {
+                    if(status === "OK"){
+                        directionsRenderer.setDirections(result);
+                        map.fitBounds(result.routes[0].bounds);
+                        console.log("Displaying map directions");
+                    } else {
+                        console.error("Failed to display map directions: "+status);
+                    }});
+                break;
+            case google.maps.DirectionsStatus.NOT_FOUND:
+                console.error("One or both locations not found.");
+                break;
+            default:
+                console.error("Unexpected map error");
+        }
+    })
+}
+
 async function updateLocations(source,destination){
     //Map back when I wanted to try google maps but didn't have an API key
     //let map_html = "<iframe id=\"travel-map\" style=\"border:0;\" allowfullscreen=\"\" src=\"https://www.google.com/maps/embed/v1/directions?origin={source}&destination={dest}\" loading=\"lazy\"></iframe>";
     //map_html = map_html.replaceAll("{source}",source);
     //map_html = map_html.replaceAll("{dest}",destination);
 
-    let map_html = "<div id=\"travel-map\"></div>"
+    //let map_html = "<div id=\"travel-map\"></div>"
 
-    document.getElementById("transport").innerHTML = document.getElementById("transport").innerHTML.replaceAll("{map}",map_html);
+    //document.getElementById("transport").innerHTML = document.getElementById("transport").innerHTML.replaceAll("{map}",map_html);
 
     let coords = await getAddressCoords(source);
     document.getElementById("contact-location-coords").href = "geo:"+coords[0]+","+coords[1]+";u=1170";
@@ -431,6 +481,12 @@ async function updateLocations(source,destination){
     let dest_coords = await getAddressCoords(destination);
 
     //makeMap(coords[0],coords[1],dest_coords[0],dest_coords[1]);
+    var avg_lat = (parseFloat(coords[0]) + parseFloat(dest_coords[0]))/2.0;
+    var avg_lon = (parseFloat(coords[1]) + parseFloat(dest_coords[1]))/2.0;
+
+    //TODO: verify billing details once bank account has enough to do so to try get towards displaying right
+    // Once debugged as being used correctly add a restriction to the github website for API key use and only then commit
+    generateMap(source,destination,avg_lat,avg_lon);
 
     var dist_and_duration = await getRoutedDistance(coords[0],coords[1],dest_coords[0],dest_coords[1]);
     document.getElementById("distance-km").innerHTML = dist_and_duration[0].toFixed(2);
@@ -464,7 +520,6 @@ async function onCreation(){
     let official_url = window.location.pathname;
     let web_link = document.getElementById("contact-web-a");
     web_link.innerHTML = web_link.innerHTML.replaceAll("{web-address}",official_url);
-
     if(decryptedData == null){
         document.getElementById("contact-phone-li").remove();
         document.getElementById("transport").remove();
@@ -508,5 +563,6 @@ function getCV(){
     window.print();
 }
 
-//Stuff that happens when the page loads
-onCreation();
+document.addEventListener('DOMContentLoaded', () => {
+    onCreation();
+  });
