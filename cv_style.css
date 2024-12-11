@@ -215,6 +215,49 @@ main > :first-child .center-block button:hover{
     margin-top: auto;
 }
 
+@keyframes spinner{
+    0% {transform:rotate(0);}
+    100%{transform:rotate(360deg);}
+
+}
+@keyframes load-text{
+    0%{filter:blur(0);transform:translateY(0px);}
+    100%{filter:blur(2px);transform:translateY(1px);}
+}
+
+#loading-splash{
+    position: fixed;
+    display: block;
+    text-align: center;
+    align-content: center;
+    height: 100%;
+    width: 100%;
+    backdrop-filter: brightness(60%);
+    backdrop-filter: blur(10px);
+    z-index: 9999;
+    color: var(--primary-darkest);
+    font-size: large;
+
+}
+
+#loading-splash > i{
+    color: var(--primary);
+    font-size: 10vh;
+    animation-name: spinner;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out;
+}
+
+#loading-splash > p {
+    animation-name: load-text;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    animation-direction: alternate;
+}
+
 @page{
     margin:0;
     padding:0;

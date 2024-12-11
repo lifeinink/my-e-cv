@@ -503,6 +503,10 @@ async function updateLocations(source,destination,secret){
     //TODO: get distance between the two locations and update the rest of the transport section
 }
 
+function finishLoadingSplash(){
+    document.getElementById("loading-splash").classList.add("hidden");
+}
+
 async function onCreation(){
     let decryptedData = await getEncryptedData();
 
@@ -544,6 +548,7 @@ async function onCreation(){
         console.log("Failure to display skills: "+e);
         document.getElementById("skills-section").remove();
     }
+    finishLoadingSplash();
 }
 
 function getCV(){
