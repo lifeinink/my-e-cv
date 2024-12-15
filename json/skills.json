@@ -15,6 +15,11 @@
             "name":"Problem Solving",
             "score":"AVG",
             "content":[11,12,13,14,15]
+        },
+        {
+            "name":"Programming",
+            "score":"AVG",
+            "content":[16,17,18]
         }
     ],
     "content":[
@@ -57,7 +62,7 @@
         {
             "id":6,
             "name":"Dependability",
-            "score":2
+            "score":3
         },
         {
             "id":7,
@@ -112,6 +117,30 @@
             "name":"Creative problem solving",
             "score":3,
             "description":"This is one of my favourite skills to engage with and grow. I use it in my hobbies, assignments, projects, and hypothetical situations just to have a bit of fun. The greatest weakness I'm aware off in this area occurs during the prolonged execution of iterative solutions to problems where information is complete, and I can't find alternative perspectives to keep the novelty of the problem going, leading to reduced motivation."
+        },
+        {
+            "id":16,
+            "name":"Android development with Java",
+            "score":2,
+            "description":"I achieved an A in my mobile development course, in which I developed apps including one that generates colours that are complimentary to the user's colour pallete (taken from skin, hair, eyes)"
+        },
+        {
+            "id":17,
+            "name":"Parallel programming with C++",
+            "score":2,
+            "description":"A+ in parallel computing course where I parallelised a 'N-body problem' particle simulator with the Threads and OpenMP libraries. Most Massey courses were taught in C++."
+        },
+        {
+            "id":18,
+            "name":"Web development",
+            "score":1.5,
+            "description":"I've used HTML, CSS, JS, and some of SQL for almost a decade and have coded backends in ASP.NET, PHP, Flask and Django. I've taken courses in web development and cloud computation which familiarised me with AWS. I've had the privilege of developing web applications such as a e-commerce site for a florist, and course selection and bus timetable management applications for my old highschool. I built my electronic-CV with HTML5. However, I'm rusty and don't have a working knowledge of modern development frameworks (e.g. Svelt, React.js), nor have I taken any formal database development and management or socket programming courses."
+        },
+        {
+            "id":19,
+            "name":"Network design and configuration",
+            "score":0.5,
+            "description":"In a networks and security course I learnt to design and set up computer networks using CISCO routers via simulators. But it's been a while since that course and I have no real world experience."
         }
     ]
 }
