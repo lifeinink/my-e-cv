@@ -18,8 +18,8 @@
         },
         {
             "name":"Programming",
-            "score":"AVG",
-            "content":[16,17,18]
+            "score":"AVG:2,2,2,1",
+            "content":[16,17,18,20]
         }
     ],
     "content":[
@@ -141,6 +141,12 @@
             "name":"Network design and configuration",
             "score":0.5,
             "description":"In a networks and security course I learnt to design and set up computer networks using CISCO routers via simulators. But it's been a while since that course and I have no real world experience."
+        },
+        {
+            "id":20,
+            "name": "Prompt Engineering with Python",
+            "score": 0.5,
+            "description":"I'm working towards working proficiency in intelligent systems including machine learning, to build on the AI course I took in my GradDipInfSci. With a recent project creating a tailored news podcast from RSS and newsfeeds using web scraping, LLMs and prompt engineering, and TTS via python, Hugging Face serverless inference, and Google's whisper. I'm currently deploying it on a Flask server hosted on an RPi."
         }
     ]
 }
