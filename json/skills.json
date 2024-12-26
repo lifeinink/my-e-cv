@@ -144,7 +144,7 @@
         },
         {
             "id":20,
-            "name": "Prompt Engineering with Python",
+            "name": "Prompt engineering with Python",
             "score": 0.5,
             "description":"I'm working towards working proficiency in intelligent systems including machine learning, to build on the AI course I took in my GradDipInfSci. With a recent project creating a tailored news podcast from RSS and newsfeeds using web scraping, LLMs and prompt engineering, and TTS via python, Hugging Face serverless inference, and Google's whisper. I'm currently deploying it on a Flask server hosted on an RPi."
         }
