@@ -177,8 +177,8 @@ table{
 .skill-section > ul > li:hover .hover-text{
     display: block;
     min-width:100px;
-    width: 200px;
-    max-width: 500px;
+    width:55vw;
+    z-index: 50;
     text-wrap-mode:wrap;
 }
 
