@@ -301,6 +301,8 @@ main > :first-child .center-block button:hover{
     background-color: var(--primary-darkest);
     border-radius: 7px;
     margin: auto;
+    margin-top: 1%;
+    margin-bottom: 10%;
     padding: 0;
 }
 
