@@ -11,6 +11,21 @@ function expand(id, thisId){
     } 
 }
 
+function multiExpand(ids,thisId,expandText,contractText){
+    let this_ = document.getElementById(thisId);
+    if(this_.innerHTML == expandText)this_.innerHTML = contractText;
+    else this_.innerHTML = expandText;
+    for(var i = 0; i < ids.length;i++){
+        let element = document.getElementById(ids[i]);
+        if(element.classList.contains("hidden")){
+            element.classList.remove("hidden");
+        }
+        else{
+            element.classList.add("hidden");
+        } 
+    }
+}
+
 function getMonthsToTry(){
     let months = [];
     let date = new Date()
@@ -45,14 +60,21 @@ function urlSafeBase64ToUint8Array(base64Str) {
         base64Str = base64Str + "=";
     }
 
-    const binaryString = atob(base64Str);  // Decode base64 to binary string
-    const byteArray = new Uint8Array(binaryString.length);
+    return base64ToUint8Array(base64Str);
+}
 
-    // Convert the binary string to a byte array
-    for (let i = 0; i < binaryString.length; i++) {
-        byteArray[i] = binaryString.charCodeAt(i);
+function base64ToUint8Array(base64String) {
+    // Decode the Base64 string to a binary string
+    const binaryString = atob(base64String);
+
+    // Create a Uint8Array and populate it
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
     }
-    return byteArray;
+
+    return bytes;
 }
 
 async function makeHash(plainText){
@@ -507,6 +529,12 @@ function finishLoadingSplash(){
     document.getElementById("loading-splash").classList.add("hidden");
 }
 
+//TODO: seperate loader for that content within the display window instead
+function startLoadingSplash(){
+    document.getElementById("loading-splash").classList.remove("hidden");
+}
+
+let file_secret = null;
 async function onCreation(){
     let decryptedData = await getEncryptedData();
 
@@ -538,6 +566,7 @@ async function onCreation(){
 
         var secret = "";
         if(contacts.length >= 5)secret = contacts[4];
+        if(contacts.length >= 6)file_secret = base64ToUint8Array(contacts[5]);
 
         updateLocations(contacts[1],contacts[2],secret);
     }
@@ -568,6 +597,64 @@ function getCV(){
       y: 0   // Optional: Set the starting position of the content
     });*/
     window.print();
+}
+
+function displaySecretContent(content){
+    let secret_window = document.getElementById('secret-content')
+    if(secret_window.classList.contains("hidden")){
+        secret_window.classList.remove('hidden');
+    }
+    document.getElementById("secret-content-window").innerHTML = content;
+}
+
+async function getSecretDisplay(id,dir){
+    if(file_secret != null){
+        startLoadingSplash();
+        let fetching_window = await fetch(dir);
+        let cipher_raw = null;
+        if(fetching_window.ok){
+            cipher_raw = await fetching_window.text();
+        } else {
+            console.log("Failed to retrieve ciphertext");
+            window.alert("Oops, information needed for this action couldn't be retrieved.");
+            finishLoadingSplash();
+            return;
+        }
+        let tag_str = document.getElementById(id).innerText;
+        const iv = base64ToUint8Array("wrteyd1tKRTVg3HY6gB7Dg==");
+        let tag = base64ToUint8Array(tag_str);
+        let ciphertext = base64ToUint8Array(cipher_raw);
+        let cipher = new Uint8Array(ciphertext.byteLength + tag.byteLength);
+        cipher.set(ciphertext);
+        cipher.set(tag,ciphertext.byteLength);
+        const key = await crypto.subtle.importKey(
+            "raw", 
+            file_secret, 
+            { name: "AES-GCM" }, 
+            false,
+            ["decrypt"]
+        );
+        try{
+            let plainText = await crypto.subtle.decrypt(
+                { name: "AES-GCM",
+                    iv: iv,
+                    tagLength: 128//Should be equal to 128
+                 },  
+                key,
+                cipher  // The ciphertext in Uint8Array
+            );
+            const decoder = new TextDecoder("utf-8");
+            displaySecretContent(decoder.decode(plainText));
+        } catch(e){
+            window.alert("Couldn't display content because the token was invalid");
+            console.log("Decrytion failed: "+e);
+        }
+        finishLoadingSplash();
+    } else {
+        window.alert("You need to access the website from an invitation to view this content");
+        console.log("Can't access secrets without key");
+    }
+
 }
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -34,9 +34,19 @@
 
     </head>
     <body>
-        <div id="loading-splash">
+        <div id="loading-splash" class="screen-only">
             <i class="fa-solid fa-spinner"></i>
             <p>Loading, please wait.</p>
+        </div>
+        <div id="secret-content" class="hidden screen-only">
+            <sec id="inner-secret-content">
+                <sec>
+                    <button onclick="document.getElementById('secret-content').classList.add('hidden');" class="fa-solid fa-window-close"></button>
+                </sec>
+                <sec id="secret-content-window">
+
+                </sec>
+            </sec>
         </div>
         <header>
             <h1>Patrick O&#39;Keeffe</h1>
@@ -85,6 +95,7 @@
                 </section>
                 <section>
                     <h3>Education</h3>
+                    <button id="education-expander" class="screen-only" onclick="multiExpand(['cert_prof_summary','ind_paper_summary'],'education-expander','Show All','Minimise')">Show All</button>
                     <table>
                         <thead>
                             <tr>
@@ -97,18 +108,36 @@
                         <tbody>
                             <tr>
                                 <td>Graduating</td>
-                                <td>Graduate Diploma in Information Science, with Distinction</td>
+                                <td><button onclick="getSecretDisplay('graddip','encrypted_files/graddipinfsci_grades.html')">Graduate Diploma in Information Science, with Distinction</button></td>
                                 <td>Massey</td>
                                 <td>7.45</td>
                             </tr>
+                            <tr id="cert_prof_summary" class="hidden screen-only">
+                                <td>2023</td>
+                                <td><button onclick="getSecretDisplay('certprof','encrypted_files/cert_prof.html')">Certificate of Proficiency - Undergraduate</button></td>
+                                <td>Massey</td>
+                                <td>8.0</td>
+                            </tr>
                             <tr>
                                 <td>2018</td>
-                                <td>Bachelor of Science (Technology) in Molecular and Cellular Biology</td>
+                                <td><button onclick="getSecretDisplay('bsc','encrypted_files/bsc_grades.html')">Bachelor of Science (Technology) in Molecular and Cellular Biology</button></td>
                                 <td>Waikato</td>
                                 <td>6.22</td>
                             </tr>
+                            <tr id="ind_paper_summary" class="hidden screen-only">
+                                <td>2015</td>
+                                <td><button onclick="getSecretDisplay('indpaper','encrypted_files/individual_paper_credit.html')">Individual Paper Credit</button></td>
+                                <td>Waikato</td>
+                                <td>9.0</td>
+                            </tr>
                         </tbody>
                     </table>
+                    <sec class="hidden">
+                        <sec id="graddip">pymYCfwsH0wPBx9vv+nZzw==</sec>
+                        <sec id="bsc">URWtLXJRz9aqFkrzc0nAIw==</sec>
+                        <sec id="certprof">5/018dGIBu03jKB7dJmDQg==</sec>
+                        <sec id="indpaper">Tn1+wwRXfLqS1jz6khdkTA==</sec>
+                    </sec>
                 </section>
                 <section>
                     <h3>Experience</h3>
