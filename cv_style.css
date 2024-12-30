@@ -336,6 +336,76 @@ main > :first-child .center-block button:hover{
     scrollbar-color: var(--secondary) var(--primary-pastel);
 }
 
+#hobby-grid{
+    display: flex;
+    flex-wrap: wrap;
+    width:100%;
+    padding:0px;
+    margin:0px;
+}
+
+#hobby-grid i{
+    color:var(--primary-darkest);
+}
+
+#hobby-grid > div{
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 25%;
+    display: inline;
+}
+#hobby-grid > div > div{
+    position: relative;
+}
+#hobby-grid > div > div > sec{
+    position: absolute;
+    width:100%;
+    text-align: center;
+}
+
+#hobby-grid > div > div > sec:first-of-type {
+    top: 0; /* Place the first sec at the top */
+}
+#hobby-grid > div > div > sec:last-of-type {
+    bottom: 10px; /* Place the second sec at the bottom */
+    left:0;
+}
+#hobby-grid > div p{
+    aspect-ratio: 1/1;
+    overflow-y: scroll;
+    height:auto;
+    scrollbar-color: var(--primary-darkest) var(--primary-pastel);
+}
+#hobby-grid > div p:hover{
+    scrollbar-color: var(--secondary) var(--primary-pastel);
+}
+
+#hobby-grid > div *:not(img):not(div){
+    visibility: collapse;
+    display: none;
+}
+
+#hobby-grid > div:hover *{
+    visibility:visible;
+    display: inline-block;
+}
+#hobby-grid img{
+    aspect-ratio: 1/1;
+    width: 100%;
+    height:auto;
+    object-fit: cover;
+}
+#hobby-grid > div:hover > p{
+    width:40%;
+}
+#hobby-grid > div:hover > div{
+    width:50%;
+}
+#hobby-grid > div:hover{
+    flex-grow:4;
+    flex-basis: 50%;
+}
+
 @page{
     margin:0;
     padding:0;

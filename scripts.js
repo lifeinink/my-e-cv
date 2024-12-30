@@ -529,6 +529,34 @@ function finishLoadingSplash(){
     document.getElementById("loading-splash").classList.add("hidden");
 }
 
+let hobbies_dict = {};
+async function insertHobbies(){
+    let hobby_window = await fetch("templates/hobby_temp.html");
+    let hobbies_window = await fetch("json/hobbies.json");
+    if(hobby_window.ok && hobbies_window.ok){
+        let hobby_template = await hobby_window.text();
+        let hobbies = (await hobbies_window.json()).content;
+        let hobbies_display = "";
+        for(let i = 0; i < hobbies.length;i++){
+            let new_hobby = hobby_template;
+            hobbies_dict[hobbies[i].name] = hobbies[i];
+
+            //TODO: use generic helper fuction but with index value of zero as is used in caurosel and hobbyImageSelect
+            let circles = "<i class=\"fa-solid fa-circle\" onclick=\"hobbyImageSelect('{name}',0)\"></i>";
+            for(let j = 1; j < hobbies[i].images.length;j++){
+                circles += "<i class=\"fa-regular fa-circle\" onclick=\"hobbyImageSelect('{name}',"+j+")\"></i>";
+            }
+
+            new_hobby = new_hobby.replaceAll("{circles}",circles);
+            new_hobby = new_hobby.replaceAll("{name}",hobbies[i].name);
+            new_hobby = new_hobby.replaceAll("{description}",hobbies[i].description);
+            new_hobby = new_hobby.replaceAll("{image}",hobbies[i].images[0]);
+            hobbies_display += new_hobby;
+        }
+        document.getElementById("hobby-grid").innerHTML = hobbies_display;
+    } else throw new Exception();
+}
+
 //TODO: seperate loader for that content within the display window instead
 function startLoadingSplash(){
     document.getElementById("loading-splash").classList.remove("hidden");
@@ -566,7 +594,9 @@ async function onCreation(){
 
         var secret = "";
         if(contacts.length >= 5)secret = contacts[4];
-        if(contacts.length >= 6)file_secret = base64ToUint8Array(contacts[5]);
+        if(contacts.length >= 6){
+            if(contacts[5].length > 5)file_secret = base64ToUint8Array(contacts[5]);
+        }
 
         updateLocations(contacts[1],contacts[2],secret);
     }
@@ -576,6 +606,12 @@ async function onCreation(){
     } catch(e){
         console.log("Failure to display skills: "+e);
         document.getElementById("skills-section").remove();
+    }
+    try{
+        await insertHobbies();
+    } catch(e){
+        console.log("Failure to display hobbies: "+e.stack);
+        document.getElementById("hobbies").remove();
     }
     finishLoadingSplash();
 }
@@ -655,6 +691,33 @@ async function getSecretDisplay(id,dir){
         console.log("Can't access secrets without key");
     }
 
+}
+
+function hobbyImageSelect(name,index){
+    document.getElementById(name+"_hobby_image_index").value = index;
+    let circles = "";
+    for(let i = 0; i < hobbies_dict[name].images.length;i++){
+        if(i != index)circles += "<i class=\"fa-regular fa-circle\" onclick=\"hobbyImageSelect('{name}',"+i+")\"></i>";
+        else circles += "<i class=\"fa-solid fa-circle\" onclick=\"hobbyImageSelect('{name}',"+i+")\"></i>";
+    }
+    circles = circles.replaceAll("{name}",name);
+    document.getElementById(name+"_hobby_circles").innerHTML = circles;
+    document.getElementById(name+"_hobby_image").src = "images/"+hobbies_dict[name].images[index];
+}
+
+function carousel(name,direction){
+    //Bug in JS means that -1 % n evaluated as -(1 % n)
+    let value = (parseInt(document.getElementById(name+"_hobby_image_index").value) + direction) % hobbies_dict[name].images.length;
+    if(value == -1)value = hobbies_dict[name].images.length - 1;
+    hobbyImageSelect(name,value);
+}
+
+function groupVisibilityToggle(ids){
+    for(let i = 0; i < ids.length;i++){
+        let element = document.getElementById(ids[i]);
+        if(element.classList.contains("hidden"))element.classList.remove("hidden");
+        else element.classList.add("hidden");
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

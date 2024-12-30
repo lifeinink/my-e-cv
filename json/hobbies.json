@@ -1,0 +1,34 @@
+{
+    "content":[
+        {
+            "name":"Running",
+            "images":["run.jpg"],
+            "description":"I regularly run around 5km most days and like to explore hiking trails on the weekends."
+        },
+        {
+            "name":"Creative Writing",
+            "images":["writing.jpg"],
+            "description":"I write Sci-Fi and Fantasy. Sometimes poetically. Most times, slowly and haltingly. I enjoy it almost half as much as the world-building that goes along with it."
+        },
+        {
+            "name":"Experimental Cooking",
+            "images":["breads.jpg","cake.jpg","ramen.jpg"],
+            "description":"I almost always modify recipes and sometimes come up with my own with the goal of better nutrient profiles to meet my protein, fibre and micronutrient needs with a low glycemic load and a shoe-string budget. From the latest iteration of my regular handmade bread to protein bars without protein powder."
+        },
+        {
+            "name":"Coding Projects",
+            "images":["electronics.jpg"],
+            "description":"I have a steady habit of following my interests into projects and making little scripts to make my life easier. From games and mobile apps, to pharmacological simulations and automated advice."
+        },
+        {
+            "name":"Reading",
+            "images":["books.jpg"],
+            "description":"I read fantasy and sci-fi, and occasionally history and philosophy."
+        },
+        {
+            "name":"Diving Down Rabbit Holes",
+            "images":["rabbit_hole.jpg"],
+            "description":"I like deep diving topics, especially those I haven't explored yet. But common areas include economics, psychology, biology, philosophy and cultures, technology and sociology."
+        }
+    ]
+}
