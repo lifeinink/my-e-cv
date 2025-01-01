@@ -9,7 +9,7 @@
         {
             "name":"Professional Reliability",
             "score":"AVG",
-            "content":[6,7,8,9,10]
+            "content":[6,7,8,9,10,21]
         },
         {
             "name":"Problem Solving",
@@ -147,6 +147,12 @@
             "name": "Prompt engineering with Python",
             "score": 0.5,
             "description":"I'm working towards working proficiency in intelligent systems including machine learning, to build on the AI course I took in my GradDipInfSci. With a recent project creating a tailored news podcast from RSS and newsfeeds using web scraping, LLMs and prompt engineering, and TTS via python, Hugging Face serverless inference, and Google's whisper. Currently hosted as a Flask web app."
+        },
+        {
+            "id":21,
+            "name": "Attention to detail",
+            "score": 2,
+            "description": "Hundreds of hours of wet laboratory work during my BSc training taught me to work precisely and accurately for hours under pressure (small deviations in operations could lead to inaccurate results). However, I'm yet to test this ability in a professional environment."
         }
     ]
 }
