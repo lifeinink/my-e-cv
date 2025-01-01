@@ -153,6 +153,18 @@
             "name": "Attention to detail",
             "score": 2,
             "description": "Hundreds of hours of wet laboratory work during my BSc training taught me to work precisely and accurately for hours under pressure (small deviations in operations could lead to inaccurate results). However, I'm yet to test this ability in a professional environment."
+        },
+        {
+            "id":22,
+            "name": "Physical fitness",
+            "score": 2,
+            "description": "I’ve worked on my fitness through near-daily runs and calisthenics workouts along with multiple walks a day. My estimated VO2 max is 52, but I haven't re-achieved a desirable body composition."
+        },
+        {
+            "id":23,
+            "name": "Food hygiene",
+            "score": 3,
+            "description": "I’ve kept up food hygiene practices I learnt during hospitality courses at highschool."
         }
     ]
 }
