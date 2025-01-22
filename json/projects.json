@@ -1,0 +1,33 @@
+{
+    "type":"projects",
+    "content":[
+        {
+            "title":"Web Scraping for Job Opportunity Analysis",
+            "thumbnail":"web_thumb.png",
+            "summary":"Web-scraped over 2000 web pages to calculate which cities in NZ have better opportunities for someone of my background using Selenium with Python.",
+            "skills":["Selenium","Python","RPi","Data Processing","Data Visualisation"],
+            "content":"web_scraper.md"
+        },
+        {
+            "title":"Electronic-CV",
+            "thumbnail":"<i class=\"fa-regular fa-address-card\"></i>",
+            "summary":"An interactive and information rich website with access control for sensitive data that customises itself to display relevant information to people who may hire me or use my services.",
+            "skills":["Web Development","HTML5","JavaScript","Markdown","JSON"],
+            "content":"electronic_cv.md"
+        },
+        {
+            "title":"Customised News Podcast",
+            "thumbnail":"<i class=\"fa-regular fa-newspaper\"></i>",
+            "summary":"A web application or tasker task that turns newsletters and RSS feeds into a customised podcast tailored to my interests to spark my curiosity and thinking without leading me down rabbit holes so I can spend more time planning and less time getting informed.",
+            "skills":["Python","Prompt Engineering","API Development","Redis"],
+            "content":"customised_news_podcast.md"
+        },
+        {
+            "title":"Fashion Colour Matcher",
+            "thumbnail":"<i class=\"fa-regular fa-camera\"></i>",
+            "summary":"An Android application that determines which colours compliment a person from images.",
+            "skills":["Android","Mobile Development","Java","Parallel Programming","Image Processing"],
+            "content":""
+        }
+    ]
+}

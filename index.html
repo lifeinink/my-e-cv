@@ -22,7 +22,9 @@
         <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
         -->
-        <script type="text/javascript" src="qrcode.js"></script>
+        <script type="text/javascript" src="third_party_libraries/qrcode.js"></script>
+        
+        <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
         
         <!--
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -30,7 +32,7 @@
         -->
 
         
-        <script type="text/javascript" src="scripts.js" defer></script>
+        <script type="module" src="main.js" defer></script>
 
     </head>
     <body>
@@ -145,6 +147,10 @@
                         <sec id="indpaper">Tn1+wwRXfLqS1jz6khdkTA==</sec>
                         <sec id="schoolrec">L2ENExPyr1oA/GzRMRG/+Q==</sec>
                     </sec>
+                </section>
+                <section id="project-list" class="screen-only">
+                    <h3>Projects</h3>
+                    <ul id="projects-list"></ul>
                 </section>
                 <section>
                     <h3>Experience</h3>

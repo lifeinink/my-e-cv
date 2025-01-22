@@ -406,6 +406,28 @@ main > :first-child .center-block button:hover{
     flex-basis: 50%;
 }
 
+#projects-list > li{
+    display:grid;
+    gap:2%;
+    grid-template-columns: 25% 75%;
+    padding-bottom: 2%;
+    width:90%;
+}
+#projects-list > li > :first-child{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    background-color: var(--primary);
+    color: var(--primary-darkest);
+    border-radius: 7px;
+}
+#projects-list > li > :first-child > i,img{
+    display: block;
+    width: 100%;
+    font-size: 8vw;
+    object-fit: contain;
+}
+
 @page{
     margin:0;
     padding:0;
