@@ -1,4 +1,4 @@
-import {getEncryptedData} from './scripts/security.mjs'
+import {getEncryptedData, base64ToUint8Array} from './scripts/security.mjs'
 import {insertSkills} from './scripts/skills.mjs'
 import {updateLocations} from './scripts/map.mjs'
 import {insertProjectList} from './scripts/projects.mjs'

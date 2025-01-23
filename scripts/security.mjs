@@ -35,7 +35,7 @@ function urlSafeBase64ToUint8Array(base64Str) {
     return base64ToUint8Array(base64Str);
 }
 
-function base64ToUint8Array(base64String) {
+export function base64ToUint8Array(base64String) {
     // Decode the Base64 string to a binary string
     const binaryString = atob(base64String);
 
@@ -90,7 +90,7 @@ export async function getEncryptedData(){
     let data_as_string;
     let dataFound = false;
     for(var i = 0; i < months.length && !dataFound;i++){
-        saltSalt =  new Uint8Array(capLength( await makeHash(months[i]+staticSalt)));
+        let saltSalt =  new Uint8Array(capLength( await makeHash(months[i]+staticSalt)));
         const formattedSaltSalt = await crypto.subtle.importKey(
             "raw", 
             saltSalt, 
