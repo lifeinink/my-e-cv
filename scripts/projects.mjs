@@ -1,3 +1,10 @@
+function startLoadingSplash(){
+    document.getElementById("loading-splash").classList.remove("hidden");
+}
+function finishLoadingSplash(){
+    document.getElementById("loading-splash").classList.add("hidden");
+}
+
 async function getListTemplate(){
     let retrieval = await fetch("templates/projects/project_thumb.html");
     if(!retrieval.ok)throw new Error("Network error, unable to retrieve project list template");
@@ -155,11 +162,18 @@ async function renderCharts(){
 }
 
 export async function openMD(content_src){
+    startLoadingSplash();
     if(window.scripts_loaded == false){
+        finishLoadingSplash();
         window.alert("Still loading libraries, please wait a bit then try again");
         throw new Error("Can't open projects until supporting libraries are loaded");
     }
+    try{
     let markdown = await getMarkdown(content_src);
     displaySecretContent(convertMarkdownToHTML(markdown));
     renderCharts();
+    } catch(e){
+        console.error(e.stack);
+    }
+    finishLoadingSplash();
 }
