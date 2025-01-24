@@ -121,6 +121,16 @@ function convertMarkdownToHTML(markdown){
         html += "</section>";
         window.converterStack.pop();
     }
+    let image_re = /\!\[\[[a-z1-9A-Z\/_\.-]*\]\]/g;
+    let md_images = html.matchAll(image_re);
+    if(md_images != null){
+        Array.from(md_images).forEach(image => {
+            let dir = image[0].substring(3,image[0].length-2);
+            let html_image = `<img src="${dir}"/>`;
+            html = html.replace(image[0],html_image);
+        });
+    }
+
     return html;
 }
 

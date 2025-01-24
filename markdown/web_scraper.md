@@ -1,5 +1,5 @@
 # Web Scraping Relevant Jobs By Location
-![[../images/project_result.png]]
+![[../images/web_thumb.png]]
 Web-scraped over 2000 web pages to calculate which cities in NZ have better opportunities for someone of my background using Selenium with Python.
 ## Problem Background
 I planned on using job posting data to aid in deciding where I would relocate for the time between February of 2025 and my Master's studies starting in July. Using overall job posting data for a small number of locations gives a limited (to regions of NZ) and inaccurate (all job postings, not just the ones I qualified for) picture of job opportunities, and manually collecting data on categories of jobs for every location in New Zealand would be time consuming.![[../images/job_seekers_vs_jobs.png]] So instead, I decided to scrape a well known job posting website in New Zealand for the data.
