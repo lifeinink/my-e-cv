@@ -1,7 +1,7 @@
 import {getEncryptedData, base64ToUint8Array} from './scripts/security.mjs'
 import {insertSkills} from './scripts/skills.mjs'
 import {updateLocations} from './scripts/map.mjs'
-import {insertProjectList} from './scripts/projects.mjs'
+import {insertProjectList, openMD} from './scripts/projects.mjs'
 
 function expand(id, thisId){
     let element = document.getElementById(id);
@@ -232,7 +232,45 @@ function groupVisibilityToggle(ids){
     }
 }
 
+// Utility to load scripts asynchronously and wait for them
+function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.async = true;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+async function loadHighlighter(){
+    // Load Highlight.js core and Python module
+    Promise.all([
+        loadScript('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js'),
+        loadScript('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/python.min.js'),
+        loadScript("https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"),
+        loadScript("https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js")
+    ]).then(() => {
+
+        // Apply Highlight.js to all code blocks
+        document.querySelectorAll('pre code').forEach((block) => {
+            hljs.highlightElement(block);
+        });
+
+        //Initialise Mermaid
+        mermaid.initialize({startOnLoad: false});
+
+        window.scripts_loaded = true;
+    }).catch((error) => {
+        console.error('Error loading Highlight.js, or Mermaid.js scripts:', error);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    window.scripts_loaded = false;
+    loadHighlighter();
+
     //Define externally used functions
     window.expand = expand;
     window.multiExpand = multiExpand;
@@ -240,6 +278,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.getSecretDisplay = getSecretDisplay;
     window.carousel = carousel;
     window.groupVisibilityToggle = groupVisibilityToggle;
+    window.openMD = openMD;
 
     onCreation();
+
   });

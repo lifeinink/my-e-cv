@@ -25,11 +25,16 @@ LG[Link Generator] -->|Credentials and specify customisation for| CE[Website] <-
 CE -->|Generates| CV[One Page CV]
 ENCRYPTOR[Encryptor] -->|Secure sensitive information for| DATA
 ```
-- **Link Generator**: use URI fields to transfer sensitive information that often changes to the website (such as work location and cryptographic secrets) in an encrypted format, as well as non-sensitive customisation information.
-- **Website**: Use the customisation specifications and sensitive information to generate an interactive website that can be printed into a CV format, accessing more data heavy elements from the data layer.
-- **One Page CV**: created by printing the website or by pressing a CV button.
-- **Data Layer**: Separate from the website to improve maintenance through separation of concerns and improve performance as explained in the choices section of this report. Some documents here are encrypted.
-- **Encryptor**: Encrypt data heavy, non-transient sensitive information to enable access control of that information (for instance specifics about grades), then stored in the data layer.
+#### Link Generator ::LG
+Use URI fields to transfer sensitive information that often changes to the website (such as work location and cryptographic secrets) in an encrypted format, as well as non-sensitive customisation information.
+#### Website ::CE
+Use the customisation specifications and sensitive information to generate an interactive website that can be printed into a CV format, accessing more data heavy elements from the data layer.
+#### One Page CV ::CV
+Created by printing the website or by pressing a CV button.
+#### Data Layer ::DATA
+Separate from the website to improve maintenance through separation of concerns and improve performance as explained in the choices section of this report. Some documents here are encrypted.
+#### Encryptor ::ENCRYPTOR
+Encrypt data heavy, non-transient sensitive information to enable access control of that information (for instance specifics about grades), then stored in the data layer.
 ### Security
 ```mermaid
 graph TD

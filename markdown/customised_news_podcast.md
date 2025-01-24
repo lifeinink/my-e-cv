@@ -22,8 +22,8 @@ EMAIL[Newsletter emails] -->|Read| SCRAPER
 SCRAPER --> PROMPT[LLM Generates News Podcast] --> TTS[Text to Speech] --> DONE((Done))
 ```
 
-### Extracting News Article Information
-```
+### Extracting News Article Information ::SCRAPER
+```python
 # Fetches RSS feeds from which news content is crawled and scraped
 def getArticles():
     links = [
@@ -64,7 +64,7 @@ def getArticles():
 ```
 
 1. **Rate limiting**: Inspect rate limits to determine if it's safe to request information from the URL
-```
+```python
 #Ensures that urls with rate limits aren't spammed into DOS
 def pruneLinksByAccessPolicy(links):
     now = (datetime.now() - datetime(1970,1,1)).total_seconds()
@@ -115,7 +115,7 @@ def pruneLinksByAccessPolicy(links):
 ```
 2. **Fetch data**: If it's safe and we haven't reached the token limit for the news context to provide the LLM, request and extract information from the XML at that URL such as title and published date, but only save the ones published in the last 36 hours and the title is unique (to avoid crude duplicates).
 3. **Extract content**: Extract the content of articles and newsletters using beautiful soup, if necessary crawling to the article website. Stored it in JSON format.
-```
+```python
 #Get news content from article website
 def fetch_article_content(url):
     try:
@@ -150,9 +150,9 @@ def fetch_article_content(url):
         print(f"Failed to fetch content from {url}: {e}")
         return "Content unavailable."
 ```
-### LLM Generates News Podcast
+### LLM Generates News Podcast ::PROMPT
 The news articles were then added to a prompt for Mistral-7B Instruct v0.3 using HuggingFace's serverless inference API. The prompt was iterated on to attempt to improve the quality of the podcast using canonical form instructions (topical rails).
-```
+```python
 #Prompt a LLM to make a summary of the news based on my interests and the collected articles
 def proompt(content, secret):
     word_limit = "750"
@@ -200,10 +200,10 @@ The focus of prompt engineering for the initial news podcast generator attempts 
 #### Why No Expert Prompting?
 Deployment issues came before further prompt refinement. Adding `You are an award winning journalist tasked with creating a script...` might help but I'm yet to test differences in performence
 #### Previous Prompt Iterations and Their Issues
-### Text To Speech
+### Text To Speech ::TTS
 #### Python Version
 The resulting podcast script is then converted to audio in a MP3 format using Google's TTS API with en-US-Wavenet-F and saved as a MP3 file for later use.
-```
+```python
 def tts(text,out_src):
     credentials = service_account.Credentials.from_service_account_file(
     r"SOMEWHAT/SECURE/DIR/TO/CREDENTIALS"
@@ -255,15 +255,18 @@ PROCESS --> |Write| MP3[News MP3]
 NEWS --> |Sends| MP3
 ```
 
-- **Token Authentication**: Simply matches the raw string with a 'secret' and the current day rather than a match to ensure that only I'm using it.
-	- **Why so low security**: attackers would have to discover the URL first, which isn't published, and circumvent Cloudflare tunnel security measures. Since the secret isn't published it won't be reverse engineered unless they crack into the RPi I'm hosting the program on (who would put in that amount of effort for so little reward?). So, I saved myself some time (though I'd never be so relaxed with other people's data).
-- **assets/news**: authenticates the request, then returns with the news.MP3
-- **process/news**: cycles between states with differing behaviour:
+##### Token Authentication ::AUTH
+- Simply matches the raw string with a 'secret' and the current day rather than a match to ensure that only I'm using it.
+- **Why so low security**: attackers would have to discover the URL first, which isn't published, and circumvent Cloudflare tunnel security measures. Since the secret isn't published it won't be reverse engineered unless they crack into the RPi I'm hosting the program on (who would put in that amount of effort for so little reward?). So, I saved myself some time (though I'd never be so relaxed with other people's data).
+##### assets/news ::NEWS
+Authenticates the request, then returns with the news.MP3
+##### process/news ::PROCESS
+Cycles between states with differing behaviour:
 	- "sent" or uninitialized: sets the state to "loading" and starts a thread to process the news using the solution, either resulting in the state changing to "loaded" or "failed". Returns the JSON status as "starting"
 	- "loading": when requests come to this route and the status is "loading" it returns a JSON status "loading", indicating that the podcast is being generated 
 	- "failed": when a request comes to this route and the status is "failed" is does the same thing as "sent" but returns the JSON status "failed, trying again" along with a 500 code
 	- "loaded": sets the status to "sent", returns a JSON status "loaded" along with a URL to the assets/news page.
-```
+```python
 @app.route("/process/news", methods=['POST'])
 def getNews():
     if validateToken():
@@ -286,7 +289,8 @@ def getNews():
     else:
         abort(401)
 ```
-- **status/news**: returns the current status of the news generator (sent, loading, failed or loaded) without affecting it.
+##### status/news ::STATUS
+Returns the current status of the news generator (sent, loading, failed or loaded) without affecting it.
 #### Tasker JavaScript Action
 To run the solution on my phone I first made a rough port from Python to JavaScript using Claude, then made adjustments so that the application ran smoothly in a testing environment on my laptop as a website. Then I adjusted the JavaScript to work with Tasker functions instead of Browser ones and made work arounds for the older version of JS that Tasker uses (this stage is currently in progress).
 ## Impact and Limitations

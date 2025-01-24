@@ -55,12 +55,12 @@ CLEAN -.-> |Write| FILE2
 FILE2 -.-> |Read| EXTRACT
 VISUALISE --> DONE((Done))
 ```
-#### Data Filtering
+#### Data Filtering ::F
 Allowed URLs were retrieved from the website's robot.txt file and sorted into either job paths or location paths for further processing. The job categories were then further filtered to those which I could meet the requirements for. Over several iterations the list of locations was pruned as I gained more information about which cities and towns ranked well in my decision matrix by other factors such as rent and proximity to rural job opportunities. Results from the partial scraping of previous iterations were built on rather than starting from scratch.
-#### Building Allowed URLs
+#### Building Allowed URLs ::C
 The website's paths to location and job information followed the format {job path}/{location path}. This allowed me to combine the two path components to form a list of URLs to scrape rather than crawl the website.
 
-```
+```python
 def getURLs(root):
     pre = []
     with open("selected_sources/job_types.txt","r") as file:
@@ -84,10 +84,10 @@ def getURLs(root):
             total_urls.append(root+dir_)
     return total_urls
 ```
-#### Web Scraping
+#### Web Scraping ::SCRAPE
 ##### Hardware Setup
 A raspberry Pi was set up to run the scraping using a Chromium web driver with settings configured to reduce the computational load to both improve performance and work within the RPi's constrained power.
-```
+```python
     options = Options()
     options.add_argument("--headless")
     options.add_argument("--disable-gpu")
@@ -103,7 +103,7 @@ A raspberry Pi was set up to run the scraping using a Chromium web driver with s
 ```
 ##### Scraping
 Achieved by simply traversing through the list of URLs and extracting the number of jobs from each page as displayed in a element with a unique class name.
-```
+```python
 def scrapeURL(driver,url):
     driver.get(url)
     count_text = driver.find_element(By.CLASS_NAME, "tm-search-header-result-count__heading").get_attribute('innerHTML')
@@ -116,10 +116,10 @@ def scrapeURL(driver,url):
         raise Exception("Size at "+url+" not found")
     return size
 ```
-##### Rate Limiting and Failure Tolerance
-###### Tolerating Scraping Failures
+##### Rate Limiting and Failure Tolerance ::RATE
+###### Tolerating Scraping Failures ::QUEUE
 In the event that a URL couldn't be scraped, an exception was thrown and depending on the iteration of the solution the URL would either be put at the end of the URL queue or skipped.
-```
+```python
             try:
                 result = scrapeURL(driver,selected_url)
                 results[selected_url] = result
@@ -135,11 +135,11 @@ Every five to ten minutes (depending on the solution version) scraping sessions 
 Results were saved in a csv format in URL, Job-posting pairs.
 #### Data Processing
 The results of the web scraping were stored in key value pairs in a CSV file and needed to be transformed into a table with jobs as rows and locations as columns. Critically the labels needed to be ordered (e.g. IT/software development, and IT/network engineering should be closer to each other than IT and Customer Service jobs). To do this I constructed a job and location tree with each directory in a path as a node, then used a depth first search of both to create ordered intersections between the trees to transform it into a matrix that could be copied cell by cell into a CSV table.
-##### Tree Construction
+##### Tree Construction ::TREE
 Because the paths contained the implied structure of the tree I could construct the job tree and location tree in a top down rather than bottom up fashion. Because the size of the tree was relatively small runtime wasn't an issue.
 
 Tree construction parts of the LabelTree Class:
-```
+```python
     def __init__(self,label:str="",isJob=True,parent = None):
         self.type_ = TreeType.JOB if isJob else TreeType.LOCATION
         self.num_children = 0
@@ -155,9 +155,9 @@ Tree construction parts of the LabelTree Class:
         elif len(child_parts) > 1:self.children[head].addChild('/'.join(child_parts[1:]))
         self.num_children+=1
 ```
-##### Matrix Construction
+##### Matrix Construction ::DFS
 1. Construct the row and column labels with independent depth first searches
-```
+```python
         print("labelling rows")
         self.step = 0
         self.depthFirstSearch(self.jobs)
@@ -167,7 +167,7 @@ Tree construction parts of the LabelTree Class:
         self.depthFirstSearch(self.location)
 ```
 2. Perform a depth first search on the location labels where at each step a depth first search on job labels was performed to enumerate the intersection between the two label categories in the correct order.
-```
+```python
                 #If tree is a job that means adding the cell
                 if tree.isJob():
                     hypothesis = tree.getFullLabel()+","+self.curr_location
@@ -204,7 +204,7 @@ Tree construction parts of the LabelTree Class:
                     self.curr_col += 1
 ```
 3. Retrieve the value corresponding to the composite path of the job and add it as the cell value at the coordinate of the intersection of the two labels.
-```
+```python
     def getValue(self, job_name,location_name) -> int:
         key = location_name
         if location_name == "":key = job_name
@@ -213,11 +213,11 @@ Tree construction parts of the LabelTree Class:
         if key in self.results:return self.results[key]
         return -1
 ```
-##### Depth First Search
+###### Depth First Search
 Used the standard non-recursive method. Action at each stage was delineated by the type of tree and the "stage" property of the "Matrifier" class
 - Stage one: labels
 - Stage two: cell values
-```
+```python
     def depthFirstSearch(self, root:LabelTree):
         if root is None:return
 
@@ -236,19 +236,19 @@ Used the standard non-recursive method. Action at each stage was delineated by t
                 stack.push(child)
 ```
 #### Extracting Insights
-##### Cleaning Data
+##### Cleaning Data ::CLEAN
 Simply removed rows and columns where no values were obtained
-##### Integrate with Existing Dataset
+##### Integrate with Existing Dataset ::EXTRACT
 1. Calculated the number of jobs I qualified for at each viable location
 2. Calculated the estimated number of job seekers per job I qualified for (assumes everyone is looking for the jobs I am and not the ones I don't qualify for, which is roughly equivalent to assuming everyone is low-skill since the proportion of jobs that are in software development is insignificant).
 3. Add this to the existing data which included job seekers per total number of jobs in each location I was interested in at the time.
-##### Visualise Job Opportunities
+##### Visualise Job Opportunities ::VISUALISE
 Using a scatterplot of seekers per job and seekers per eligible job over the unemployment rate in each location (assumes that most undocumented frictional unemployment is insignificant) using matplotlib.
 
 Removed outliers assuming normal distributions over data before constructing regressions with sci-kit learn.
 
 This stage was done over a few iterations with Claude since I'm still not familiar with these libraries.
-```
+```python
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
