@@ -1,17 +1,19 @@
 # Customised News Podcast
 A web application or tasker task that turns newsletters and RSS feeds into a customised podcast tailored to my interests to spark my curiosity and thinking without leading me down rabbit holes so I can spend more time planning and less time getting informed.
 ## Problem Background
-Keeping informed about the news and developments in my field of interest used to require ad-hoc methods, for instance, while my morning alarm was programmed to play a news podcast, it covered general news including areas that don't interest me like sports, and I had to look at summaries of AI research separately, which took time and was open ended enough that it could eat into my planning time in the morning.
+Keeping informed about the news and developments in my field of interest used to require ad-hoc methods:
+- My morning alarm played a news podcast. It covered general news, including areas that don’t interest me like sports.
+- Manual open ended reading of AI research summaries ate into my morning planning time
 
-So I decided to aggregate news from a variety of sources and turn it into an on demand podcast tailored to my interests and at a level of detail that balanced time, satisfying high-level curiosity, and giving me leads for more in depth learning.
+So I decided to aggregate news from a variety of sources and turn it into an on demand podcast tailored to my interests at a level of detail that balanced time consumption with satisfying my curiosity, and giving me leads for more in depth learning.
 ### Design Requirements
-- **Zero dollar budget**: meaning measures had to be taken to remain in the free-tier of APIs and hosting while trying to control for quality.
-- **Low scale**: the solution only has to work for one person. This greatly simplified the development process.
-- **Outputs**: a podcast customised to my interests from **recent** news that plays after I turn off my morning alarm or on demand.
-	- **Timely**: only recent news.
+- **Zero dollar budget**: Meaning measures had to be taken to remain in the free-tier of APIs and hosting while trying to control for quality.
+- **Low scale**: The solution only has to work for one person. This simplified the development process.
+- **Outputs**: A podcast customised to my interests from **recent** news that plays after I turn off my morning alarm or on demand.
+	- **Timely**: Only reports on recent news.
 	- **Relevant**: Includes news about developments in my field of research, and general news, but not on things I may not be interested in.
-- **Rate-limited**: built in safety mechanisms to not breach rate-limits of news sources.
-- **Fast enough**: should not take more than a few minutes to generate a podcast from start to finish.
+- **Rate-limited**: Built in safety mechanisms to not breach rate-limits of news sources.
+- **Fast enough**: Should not take more than a few minutes to generate a podcast from start to finish.
 
 ## Solution Summary
 
@@ -63,7 +65,7 @@ def getArticles():
     return relevant_articles
 ```
 
-1. **Rate limiting**: Inspect rate limits to determine if it's safe to request information from the URL
+1. **Rate limiting**: Inspect rate limits to determine if it's safe to request information from the URL.
 ```python
 #Ensures that urls with rate limits aren't spammed into DOS
 def pruneLinksByAccessPolicy(links):
@@ -113,8 +115,8 @@ def pruneLinksByAccessPolicy(links):
     # Return the links that can be requested within existing rate limit policies
     return new_links
 ```
-2. **Fetch data**: If it's safe and we haven't reached the token limit for the news context to provide the LLM, request and extract information from the XML at that URL such as title and published date, but only save the ones published in the last 36 hours and the title is unique (to avoid crude duplicates).
-3. **Extract content**: Extract the content of articles and newsletters using beautiful soup, if necessary crawling to the article website. Stored it in JSON format.
+2. **Fetch data**: If it’s safe and we haven’t reached the token limit for the news context to provide the LLM, request and extract information from the XML at that URL such as title and published date, but only save the ones published in the last 36 hours and with unique titles (to avoid crude duplicates).
+3. **Extract content**: Extract the content of articles and newsletters using BeautifulSoup4. If necessary, crawl to the article website. Stored it in JSON format.
 ```python
 #Get news content from article website
 def fetch_article_content(url):
@@ -151,7 +153,7 @@ def fetch_article_content(url):
         return "Content unavailable."
 ```
 ### LLM Generates News Podcast ::PROMPT
-The news articles were then added to a prompt for Mistral-7B Instruct v0.3 using HuggingFace's serverless inference API. The prompt was iterated on to attempt to improve the quality of the podcast using canonical form instructions (topical rails).
+Mistral-7B Instruct v0.3 was prompted with instructions to make a podcast script using the news articles via HuggingFace’s serverless inference API. The prompt was iterated on to improve the quality of the podcast using canonical form instructions (topical rails).
 ```python
 #Prompt a LLM to make a summary of the news based on my interests and the collected articles
 def proompt(content, secret):
@@ -198,11 +200,11 @@ Please see the news articles and newsfeed email contents below, which might help
 #### Why no CoT, Reflection, N-Shot etc
 The focus of prompt engineering for the initial news podcast generator attempts to maximise the amount of news the LLM can select from (hence no N-shot) in a single inference (hence no reflection) without additional code (hence no Chain of thought, even if implicit CoT could have been used with an instruction to think through selection and organisation of articles then put the actual script in triple quotes for easy extraction).
 #### Why No Expert Prompting?
-Deployment issues came before further prompt refinement. Adding `You are an award winning journalist tasked with creating a script...` might help but I'm yet to test differences in performence
+Deployment issues came before further prompt refinement. Adding `You are an award-winning journalist tasked with creating a script...` might help, but I’m yet to test differences in performance.
 #### Previous Prompt Iterations and Their Issues
 ### Text To Speech ::TTS
 #### Python Version
-The resulting podcast script is then converted to audio in a MP3 format using Google's TTS API with en-US-Wavenet-F and saved as a MP3 file for later use.
+The resulting podcast script is then converted to audio in an MP3 format using Google’s TTS API with en-US-Wavenet-F and saved as an MP3 file for later use.
 ```python
 def tts(text,out_src):
     credentials = service_account.Credentials.from_service_account_file(
@@ -238,10 +240,10 @@ def tts(text,out_src):
         print('Audio content written to "'+out_src+'.mp3"')
 ```
 #### JavaScript Version
-Due to the limitations of JS scripts running in Tasker that make using OAuth complicated, the script was converted to audio in real-time using pre-existing TTS functions in Tasker. This decision was made to save time.
+Because of the limitations of JS scripts running in Tasker that make using OAuth complicated, the script was converted to audio in real-time using a pre-existing TTS function in Tasker to save time.
 ### Deployment
 #### Flask Server
-To run the solution as a API that my morning alarm could interact with I made a simple Flask server designed to function for only one user (adjustments to make it multi-user include a database of token-hashes for authentication and either prefix's for a Redis key (or a 'status') for each unique user, or porting to use a relational database instead.).
+To run the solution as a API that my morning alarm could interact with, I made a simple Flask server designed to function for only one user (adjustments to make it multi-user include a database of token-hashes for authentication and either prefixes for a Redis key (or a ‘status’) for each unique user, or porting to use a relational database instead).
 ```mermaid
 graph TD
 AUTH[Token Authentication]
@@ -256,16 +258,16 @@ NEWS --> |Sends| MP3
 ```
 
 ##### Token Authentication ::AUTH
-- Simply matches the raw string with a 'secret' and the current day rather than a match to ensure that only I'm using it.
-- **Why so low security**: attackers would have to discover the URL first, which isn't published, and circumvent Cloudflare tunnel security measures. Since the secret isn't published it won't be reverse engineered unless they crack into the RPi I'm hosting the program on (who would put in that amount of effort for so little reward?). So, I saved myself some time (though I'd never be so relaxed with other people's data).
+- Simply matches the raw string with a ‘secret’ and the current day (rather than a hash match), ensuring that only I can use the podcast generator.
+- **Why so low security**: Attackers would have to discover the URL first, which isn’t published, and circumvent Cloudflare tunnel security measures. Since the secret isn’t published, it won’t be reverse engineered unless they crack into the RPi I’m hosting the program on (who would put in that amount of effort for so little reward?). So, I saved myself some time (though I’d never be so relaxed with other people’s data).
 ##### assets/news ::NEWS
-Authenticates the request, then returns with the news.MP3
+Authenticates the request, then returns the 'news.MP3' file.
 ##### process/news ::PROCESS
 Cycles between states with differing behaviour:
-	- "sent" or uninitialized: sets the state to "loading" and starts a thread to process the news using the solution, either resulting in the state changing to "loaded" or "failed". Returns the JSON status as "starting"
-	- "loading": when requests come to this route and the status is "loading" it returns a JSON status "loading", indicating that the podcast is being generated 
-	- "failed": when a request comes to this route and the status is "failed" is does the same thing as "sent" but returns the JSON status "failed, trying again" along with a 500 code
-	- "loaded": sets the status to "sent", returns a JSON status "loaded" along with a URL to the assets/news page.
+	- **"sent" or uninitialized**: Sets the state to "loading" and starts a thread to process the news using the solution, resulting in the state changing to "loaded" or "failed". Returns the JSON status as "starting".
+	- **"loading"**: When requests come to this route, and the status is “loading”, it returns “loading“ JSON status, indicating that the podcast is being generated.
+	- **"failed"**: When a request comes to this route, and the status is “failed”, it does the same thing as “sent” but returns the JSON status “failed, trying again” along with a 500 code.
+	- **"loaded"**: Sets the status to "sent", returns a JSON status "loaded" along with a URL to the assets/news page.
 ```python
 @app.route("/process/news", methods=['POST'])
 def getNews():
@@ -290,13 +292,13 @@ def getNews():
         abort(401)
 ```
 ##### status/news ::STATUS
-Returns the current status of the news generator (sent, loading, failed or loaded) without affecting it.
+Returns the current status of the news generator ("sent", "loading", "failed" or "loaded") without affecting it.
 #### Tasker JavaScript Action
-To run the solution on my phone I first made a rough port from Python to JavaScript using Claude, then made adjustments so that the application ran smoothly in a testing environment on my laptop as a website. Then I adjusted the JavaScript to work with Tasker functions instead of Browser ones and made work arounds for the older version of JS that Tasker uses (this stage is currently in progress).
+To run the solution on my phone, I made a rough port from Python to JavaScript using Claude, then made adjustments so that the application ran smoothly in a testing environment on my laptop as a website. Then, I adjusted the JavaScript to work with Tasker functions instead of browser ones and made workarounds for the older version of JS that Tasker uses (this stage is currently in progress).
 ## Impact and Limitations
 ### Podcast Quality Vs Time
-- Smaller models like mistral-7B-instruct-0.3v have a more limited instruction following ability which creates a trade-off between CoT within a single inference and keeping the podcast within the time-limit. In addition the number of steps increases the latency between podcast request and delivery.
-- Future versions could use scheduled podcast generation (for instance half an hour before I'm scheduled to wake up), limiting up-to-date-ness but allowing for longer processing times. Multiple inference could be used to filter from each news source according to interests, to create a more curated set of data to draft a podcast from with implicit CoT and multiple reflectionrounds, allowing for better performance out of the smaller models for which free-inference is available. This could be done using the free-tier of the Mistral API which has a 1 request per second rate limit.
+- Smaller models like mistral-7B-instruct-0.3v have a limited ability to follow instructions, which creates a trade-off between CoT within a single inference and keeping the podcast within the time-limit. In addition, the number of steps increases the latency between podcast request and delivery.
+- Future versions could use scheduled podcast generation (for instance, half an hour before I’m scheduled to wake up), limiting up-to-date-ness but allowing for longer processing times. Multiple inference could be used to filter each news source according to interests to create a more curated set of data and then draft a podcast with implicit CoT and multiple reflection rounds. This would improve the performance of the smaller models. The free tier of the Mistral API has a 1 request per second rate limit, which could be used instead of the HuggingFace API.
 ### Scalability
-See the deployment section for how the flask server could be adapted to work for multiple users. In addition hashing of tokens would be used, as well as additional flask routes for CRUD operations on the newsfeeds for each user. Additional steps for content moderation and ethical scraping would be required as it's not guaranteed that the sources users provide would be appropriate.
-Of course at larger scales a single Flask server won't suffice. Instead load balanced routing to multiple virtual machines or serverless scripts could be used and a cloud based database but at this point, and the use of key management services. But at this point the number of changes would far outnumber the original pieces of code.
+See the deployment section for how the Flask server could be adapted to work for multiple users. Additional features could include hashing tokens and Flask routes for CRUD operations for user specific newsfeeds. Additional steps for content moderation and ethical scraping would be required, as we can’t guarantee that user provided news sources are appropriate.
+Of course, at larger scales, a single Flask server won’t suffice. Instead, load balanced routing to multiple virtual machines or serverless scripts could be used alongside a cloud based database and the use of key management services. But at that point, the number of changes would far outnumber the surviving pieces of code from this mini-project.
