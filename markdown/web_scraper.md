@@ -2,13 +2,13 @@
 ![[../images/web_thumb.png]]
 Web-scraped over 2000 web pages to calculate which cities in NZ have better opportunities for someone of my background using Selenium with Python.
 ## Problem Background
-I planned on using job posting data to aid in deciding where I would relocate for the time between February of 2025 and my Master's studies starting in July. Using overall job posting data for a small number of locations gives a limited (to regions of NZ) and inaccurate (all job postings, not just the ones I qualified for) picture of job opportunities, and manually collecting data on categories of jobs for every location in New Zealand would be time consuming.![[../images/job_seekers_vs_jobs.png]] So instead, I decided to scrape a well known job posting website in New Zealand for the data.
+I planned on using job posting data to decide where I would re-locate for the time between February 2025 and my master’s studies, starting in July. But using overall job posting data for a few locations gives a limited (to regions of NZ) and inaccurate (all job postings, not just the ones I qualified for) picture of job opportunities, and manually collecting data on categories of jobs for every location in New Zealand would be time consuming.![[../images/job_seekers_vs_jobs.png]] So instead, I scraped a well-known job posting website in New Zealand for the data.
 - Why web-scraping instead of a job posting API: The API for the job-website is for commercial uses only, while this project is for personal use.
 ### Design Requirements
-- Rate limited and compliant: the solution mustn't scrape disallowed URLs or exceed rate limits.
-- Fault tolerant: the solution needed to be interruptible and not lose scraping process, and handle visiting web pages without the expected data or structure.
-- Outputs: the solution needed to output a table of each job category against each location with locations and categories ordered by subtype (e.g. IT/software development, and IT/network engineering should be closer to each other than IT and Customer Service jobs)
-- Time constraint: the data needed to be ready within four days - the deadline for my relocation decision.
+- **Rate limited and compliant**: the solution mustn't scrape disallowed URLs or exceed rate limits.
+- **Fault tolerant**: tthe solution needed to be interruptible (and not lose scraping process), and handle visiting web pages that do not have expected data or structure
+- **Outputs**: the solution needed to output a table of each job category against each location with locations and categories ordered by subtype (e.g. IT/software development, and IT/network engineering should be closer to each other than IT and Customer Service jobs)
+- **Time constraint**: the data needed to be ready within four days - the deadline for my relocation decision.
 ## Solution Summary
 ```mermaid
 graph TD
@@ -56,7 +56,7 @@ FILE2 -.-> |Read| EXTRACT
 VISUALISE --> DONE((Done))
 ```
 #### Data Filtering ::F
-Allowed URLs were retrieved from the website's robot.txt file and sorted into either job paths or location paths for further processing. The job categories were then further filtered to those which I could meet the requirements for. Over several iterations the list of locations was pruned as I gained more information about which cities and towns ranked well in my decision matrix by other factors such as rent and proximity to rural job opportunities. Results from the partial scraping of previous iterations were built on rather than starting from scratch.
+Allowed URLs were retrieved from the website’s robot.txt file and sorted into either job paths or location paths for further processing. The job categories were then further filtered to only include those which my job applications could be competitive. I pruned the list of locations while web scraping was in progress as I gained more information about factors such as rent and proximity to rural job opportunities. When this occurred, previous scraping results were built on rather than erased.
 #### Building Allowed URLs ::C
 The website's paths to location and job information followed the format {job path}/{location path}. This allowed me to combine the two path components to form a list of URLs to scrape rather than crawl the website.
 
@@ -102,7 +102,7 @@ A raspberry Pi was set up to run the scraping using a Chromium web driver with s
     driver = webdriver.Chrome(options=options,service=service)
 ```
 ##### Scraping
-Achieved by simply traversing through the list of URLs and extracting the number of jobs from each page as displayed in a element with a unique class name.
+Achieved by traversing through the list of combined URLs and extracting the number of jobs from each page (which was stored in an HTML element with a unique class name).
 ```python
 def scrapeURL(driver,url):
     driver.get(url)
@@ -118,7 +118,7 @@ def scrapeURL(driver,url):
 ```
 ##### Rate Limiting and Failure Tolerance ::RATE
 ###### Tolerating Scraping Failures ::QUEUE
-In the event that a URL couldn't be scraped, an exception was thrown and depending on the iteration of the solution the URL would either be put at the end of the URL queue or skipped.
+When a URL couldn’t be scraped, depending on the iteration of the solution, the URL was put at the end of the URL queue or skipped.
 ```python
             try:
                 result = scrapeURL(driver,selected_url)
@@ -128,15 +128,15 @@ In the event that a URL couldn't be scraped, an exception was thrown and dependi
                 urls.append(selected_url)
 ```
 ###### Rate Limiting
-Occurred between each scrape (three to twelve seconds) and each scraping session (one to three minutes) to limit interruptions (imitating a human with random delays) and comply with scraping policy.
+Occurred between each scrape (a pause between three to twelve seconds) and each scraping session (one to three minutes) to limit interruptions (imitating a human with random delays) and comply with the site’s web scraping policy.
 ###### Tolerating Larger Spans of Scraping Failures or Interruptions
-Every five to ten minutes (depending on the solution version) scraping sessions would pause and the results would be saved, followed by a random delay before starting another session. This provided intervals in which the program could be safely terminated without losing progress as well as serving to rate limit and reduce the chances of larger blocks of scraping failures or delays from continuing.
+Results were saved every five to ten minutes (depending on the solution version), between scraping sessions. A random delay between each scraping session provided intervals in which the program could be safely terminated without losing progress, while rate-limiting and reducing the chance of larger blocks of scraping failures or response delays from continuing.
  `if time.time() - start_time >= timelimit_seconds:break`
 Results were saved in a csv format in URL, Job-posting pairs.
 #### Data Processing
-The results of the web scraping were stored in key value pairs in a CSV file and needed to be transformed into a table with jobs as rows and locations as columns. Critically the labels needed to be ordered (e.g. IT/software development, and IT/network engineering should be closer to each other than IT and Customer Service jobs). To do this I constructed a job and location tree with each directory in a path as a node, then used a depth first search of both to create ordered intersections between the trees to transform it into a matrix that could be copied cell by cell into a CSV table.
+A CSV file stored the web-scraping results in key-value pairs. These needed to be transformed into a table with jobs as rows and locations as columns. Critically, the labels needed to be ordered (e.g. IT/software development, and IT/network engineering should be closer to each other than IT and Customer Service jobs). To do this, I constructed a job and location tree with each directory in a path as a node, then used a depth first search of both to create ordered intersections between the trees to transform it into a matrix that could be copied cell by cell into a CSV table.
 ##### Tree Construction ::TREE
-Because the paths contained the implied structure of the tree I could construct the job tree and location tree in a top down rather than bottom up fashion. Because the size of the tree was relatively small runtime wasn't an issue.
+Because the paths contained the implied structure of the tree, I could construct the job tree and location tree in a top down rather than bottom up fashion. The size of the tree was relatively small, so runtime and memory weren’t issues.
 
 Tree construction parts of the LabelTree Class:
 ```python
@@ -166,7 +166,7 @@ Tree construction parts of the LabelTree Class:
         self.step = 1
         self.depthFirstSearch(self.location)
 ```
-2. Perform a depth first search on the location labels where at each step a depth first search on job labels was performed to enumerate the intersection between the two label categories in the correct order.
+2. Perform a depth-first search on the location labels. At each step, a depth-first search of job labels enumerated the intersecting cells between the two label categories in the correct order.
 ```python
                 #If tree is a job that means adding the cell
                 if tree.isJob():
@@ -214,9 +214,9 @@ Tree construction parts of the LabelTree Class:
         return -1
 ```
 ###### Depth First Search
-Used the standard non-recursive method. Action at each stage was delineated by the type of tree and the "stage" property of the "Matrifier" class
-- Stage one: labels
-- Stage two: cell values
+I used the standard non-recursive method. The action step at each stage was delineated by the type of tree and the “stage” property of the “Matrifier” class.
+- **Stage one**: get labels (row and column titles as jobs and locations respectively).
+- **Stage two**: get cell values.
 ```python
     def depthFirstSearch(self, root:LabelTree):
         if root is None:return
@@ -237,17 +237,17 @@ Used the standard non-recursive method. Action at each stage was delineated by t
 ```
 #### Extracting Insights
 ##### Cleaning Data ::CLEAN
-Simply removed rows and columns where no values were obtained
+I simply removed rows and columns with no cell values.
 ##### Integrate with Existing Dataset ::EXTRACT
 1. Calculated the number of jobs I qualified for at each viable location
-2. Calculated the estimated number of job seekers per job I qualified for (assumes everyone is looking for the jobs I am and not the ones I don't qualify for, which is roughly equivalent to assuming everyone is low-skill since the proportion of jobs that are in software development is insignificant).
-3. Add this to the existing data which included job seekers per total number of jobs in each location I was interested in at the time.
+2. Calculated the estimated number of job seekers per job I qualified for (this assumes everyone is looking for the jobs I am and not the ones I don’t qualify for, which is roughly equivalent to assuming everyone is low-skill, since the proportion of jobs that are in software development is insignificant).
+3. Added this information to the existing data, which included job seekers per total number of jobs in each location I was interested in.
 ##### Visualise Job Opportunities ::VISUALISE
-Using a scatterplot of seekers per job and seekers per eligible job over the unemployment rate in each location (assumes that most undocumented frictional unemployment is insignificant) using matplotlib.
+Using a scatterplot of seekers per job and seekers per eligible job over the unemployment rate in each location (assuming that most undocumented frictional unemployment is insignificant) using Matplotlib.
 
 Removed outliers assuming normal distributions over data before constructing regressions with sci-kit learn.
 
-This stage was done over a few iterations with Claude since I'm still not familiar with these libraries.
+This was accomplished with few iterations with Claude since I’m still not familiar with these libraries.
 ```python
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -345,13 +345,13 @@ plt.show()
 ![[../images/web_thumb.png]]
 ## Impact and Evaluation
 ### Outcome
-Over two thousand web-pages were successfully scraped. The results demonstrated differences between total job postings and ones that I would be competitive in, especially within my current city of Christchurch. This allowed me to eliminate additional location options to arrive at a choice of town/city to relocate to.
+Over two thousand web-pages were successfully scraped. The results demonstrated differences between total job postings and ones that I would be competitive in, especially within my current city of Christchurch. This allowed me to eliminate potential relocation options, aiding my relocation decision.
 
-- Pages scraped: 2294
-- Scrape success rate: 99.17%
+- **Pages scraped**: 2294
+- **Scrape success rate**: 99.17%
 ### Limitations and Room For Improvement
-- Speed: the choice of a low rate-limit and the use of a RPi to run the solution excluded the possibility of using multi-threading to increase the speed of the data scraping. Scraping over all solution iterations took a total of ten runtime hours due to web-page loading speeds and the self-imposed rate limits. Even with optimisations web-pages took longer to load on the RPi than my laptop.
-- Breadth: over several iterations the scope of the data scraping was limited to exclude locations that weren't viable for relocation. This reduced the scope and so reusability of the dataset.
-- Using job categories as a proxy for job eligibility: while necessary because of the scraping rules of the job posting website, a more accurate assessment would have been possible through using LLMs to compare the requirements or titles of each job posting to my skills.
-- Matrifier coupling: The use of a action method of the class instead of passing it as an argument, along with the use of a stage property reduces the reusability and maintainability of the depth first search method and the matrifier class through reduced orthogonality. 
-- Data processing: a functional approach to the processing of lists might have been faster to code, more readable and performed better (though it made no detectable difference). I should learn and use NumPy and Pandas.
+- **Speed**: the choice of a low rate-limit and the use of an RPi to run the solution precluded multi-threading to increase the speed of the data scraping. Scraping over all solution iterations took ten runtime hours because of webpage loading speeds and the self-imposed rate limits. Even with optimisations, web-pages took longer to load on the RPi than my laptop.
+- **Breadth**: I excluded locations that weren’t viable for relocation from web scraping over the course of the project. This reduced the scope and so reusability of the dataset.
+- **Using job categories as a proxy for job eligibility**: while necessary because of the scraping rules of the job posting website, a more accurate assessment would have been possible through using LLMs to compare the requirements or titles of each job posting to my skills.
+- **"Matrifier" coupling**: Using an action method for the depth first search, and the use of a stage property reduced the reusability and maintainability of the depth first search method and the "matrifier" class through reduced orthogonality.
+- **Data processing**: a functional approach to the processing of lists might have been faster to code, more readable and performed better (though the runtime of post scraping processing was insignificant). I should learn and use NumPy and Pandas.
