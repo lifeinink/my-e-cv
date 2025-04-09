@@ -2,6 +2,20 @@
     "type":"projects",
     "content":[
         {
+            "title":"Classification 101: Predicting Flight Delays",
+            "thumbnail":"<i class='fa fa-plane'></i>",
+            "summary":"Developing and comparing RNN, FNN and logistic regression models in the prediction of flight delays",
+            "skills":["Data Processing","Data Visualisation","Feature Engineering","Classification","Statistics"],
+            "content":"classification101.md"
+        },
+        {
+            "title":"Regression 101: Predicting Diabetes Risk",
+            "thumbnail":"<i class='fas fa-analytics'></i>",
+            "summary":"Experiment in feature selection via correlation analysis",
+            "skills": ["Data Processing","Data Visualisation","Feature Engineering","Regression"],
+            "content":"regression101.md"
+        },
+        {
             "title":"Web Scraping for Job Opportunity Analysis",
             "thumbnail":"web_thumb.png",
             "summary":"Web-scraped over 2000 web pages to calculate which cities in NZ have better opportunities for someone of my background using Selenium with Python.",

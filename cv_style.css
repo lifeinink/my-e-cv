@@ -521,12 +521,25 @@ main > :first-child .center-block button:hover{
         display: inherit !important;
     }
 
+    .experience{
+        page-break-before: always !important;
+    }
+
+    #referees{
+        margin-top: auto;
+        margin-bottom: 0px;
+    }
+
     body {
         -webkit-print-color-adjust: exact; /* Chrome, Safari */
         print-color-adjust: exact;
         color-adjust: exact; /* Standard */
         max-height: 87.1vh;
       }
+    p, li, ul, ol, table *{
+        font-size:14px;
+        margin-top: calc(var(--margin-top, 0px) / 1.2);
+    }
     header{
         box-shadow: none;
         background-color: var(--primary-pastel);
@@ -534,6 +547,16 @@ main > :first-child .center-block button:hover{
         /*border-bottom-width: 0.1cm;
         margin-bottom: 0.1cm;*/
     }
+
+    h3, h4, h5 {
+        margin-top: calc(var(--margin-top, 0px) / 2);
+        margin-bottom: calc(var(--margin-bottom, 0px) / 2);
+    }
+    h3{
+        --margin-top: 0px;
+        --margin-bottom: 0px;
+    }
+    
 
     main > * {
         background-color: white;
